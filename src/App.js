@@ -1,17 +1,17 @@
 import { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
+import CardList from './components/card-list/card-list.components';
+import SearchBox from './components/search-box/search-box.components';
 
 class App extends Component {
   constructor() {
-    console.log('1 Contructor');
     super();
 
     this.state = {
       monsters: [
         {
-          name: 'Saurav',
-          id: '001',
+          name: '',
         },
       ],
       searchField: '',
@@ -19,23 +19,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('3 Component DiD Mount');
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then((users) =>
-        this.setState(
-          () => {
-            return { monsters: users };
-          },
-          () => {
-            console.log(this.state);
-          }
-        )
+        this.setState(() => {
+          return { monsters: users };
+        })
       );
   }
 
   onSearchChange = (event) => {
-    console.log({ startingArray: this.state.monsters });
+    // console.log({ startingArray: this.state.monsters });
     const searchField = event.target.value.toLocaleLowerCase();
 
     // console.log(filteredMonsters);
@@ -46,8 +40,6 @@ class App extends Component {
   };
 
   render() {
-    console.log('2 Render Function');
-
     const { monsters, searchField } = this.state;
     const { onSearchChange } = this;
 
@@ -57,19 +49,13 @@ class App extends Component {
 
     return (
       <div className="App">
-        <input
-          type="search"
-          placeholder="search monsters"
-          className="search-input"
-          onChange={onSearchChange}
+        <h1 className="app-title">Monster Rolodex</h1>
+        <SearchBox
+          onChangeHandler={onSearchChange}
+          placeholder="search Monsters"
+          classname="search-box"
         />
-        {filteredMonsters.map((monster) => {
-          return (
-            <div key={monster.id}>
-              <h1>{monster.name}</h1>
-            </div>
-          );
-        })}
+        <CardList monsters={filteredMonsters} />
       </div>
     );
   }
